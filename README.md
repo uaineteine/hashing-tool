@@ -23,6 +23,9 @@ hash_method/          # Directory for additional hash method modules
    ```powershell
    pip install -r requirements.txt
    ```
+   
+## Environment Variable Requirement
+**Important:** Before using this package, you must set the `HASH_METHOD_LOC` environment variable to the directory containing your hash method configuration files. If this variable is not set, an error will be raised on import.
 
 ## Usage
 Import the core functions and key methods in your Python scripts, or extend the tool by adding new modules to the `hash_method/` directory.
