@@ -5,9 +5,10 @@ setup(
     version="2.0.0",
     description="A hashing tool module with core and key methods.",
     author="",
-    packages=["adaptiveio", "pyspark"],
+    packages=["hash_method"],
     install_requires=[
-        # Add any dependencies from requirements.txt here
+        "adaptiveio>=1.0.0",
+        "pyspark",
     ],
     python_requires=">=3.10",
     include_package_data=True,

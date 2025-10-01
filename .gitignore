@@ -1,1 +1,4 @@
 hash_method/__pycache__/*
+dist/*
+build/*
+hash_method.egg-info/*
