@@ -1,5 +1,5 @@
 #package imports
-from pyspark.sql.functions import sha2, concat, substr, col, hex, unjex, base64, lit
+from pyspark.sql.functions import sha2, concat, substr, col, hex, base64, lit
 
 #sub-module imports
 from .keymethods import Method

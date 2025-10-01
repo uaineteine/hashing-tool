@@ -1,5 +1,11 @@
 #base imports
 import hashlib
+import os
+
+# Check HASH_METHOD_LOC environment variable on import
+hash_dir = os.getenv("HASH_METHOD_LOC")
+if hash_dir is None:
+    raise EnvironmentError("Environment variable 'HASH_METHOD_LOC' is not set. Please set it before importing this module.")
 
 #package import
 import adaptiveio
@@ -60,7 +66,8 @@ class Method():
         
         print("Loading config files for hashing...")
         try:
-            hash_path = ...
+            hash_dir = os.getenv("HASH_METHOD_LOC")
+            hash_path = os.path.join(hash_dir, f"{name}_config.json")
             
             json_config = adaptiveio.load_json(hash_path, spark=spark)
 
