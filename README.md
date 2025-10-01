@@ -17,7 +17,7 @@ requirements.txt      # Python dependencies
 hash_method/          # Directory for additional hash method modules
 ```
 
-## Installation
+## Packaging
 1. Clone the repository or download the source code.
 2. Install dependencies:
    ```powershell
