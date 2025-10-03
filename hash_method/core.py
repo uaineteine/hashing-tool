@@ -2,7 +2,7 @@
 from pyspark.sql.functions import sha2, concat, substr, col, hex, base64, lit
 
 #sub-module imports
-from .keymethods import Method
+from .keymethods import Method, OutputFormat
 
 def trunc_col(srcdf, col_to_truncate:str, trunc_length:int):
     """_summary_
@@ -47,7 +47,7 @@ def salt_column(srcdf, col_to_salt:str, salt_str:str):
     """Adds a salt value to the specified column."""
     return srcdf.withColumn(col_to_salt, concat(col(col_to_salt), lit(salt_str)))
 
-def perf_hash(srcdf, col_to_hash:str, salt_str:str, bitlength=256, trunc_length=64):
+def perf_hash(srcdf, col_to_hash:str, salt_str:str, bitlength=256, trunc_length=64, output_format:str=OutputFormat.HEX):
     """Generates a hash for the specified column using the given salt.
 
     Args:
@@ -56,7 +56,11 @@ def perf_hash(srcdf, col_to_hash:str, salt_str:str, bitlength=256, trunc_length=
         salt_str (str): Salt value to use in hashing.
         bitlength (int, optional): Bit length of the hash. Defaults to 256.
         trunc_length (int, optional): Length to truncate the hash. Defaults to 64.
+        output_format (str, optional): Output format, either 'hex' or 'base64'. Defaults to 'hex'.
     """
+    # Validate output_format
+    output_format = OutputFormat(output_format) #throws error if invalid
+
     col_type = srcdf.schema[col_to_hash].dataType
     
     #ensure string is of type
@@ -68,6 +72,10 @@ def perf_hash(srcdf, col_to_hash:str, salt_str:str, bitlength=256, trunc_length=
     
     #SHA256 digest
     srcdf = srcdf.withColumn(col_to_hash, sha2(col(col_to_hash), bitlength))
+
+    # Convert to desired output format if not hex
+    if output_format == OutputFormat.BASE64:
+        srcdf = base64_col(srcdf, col_to_hash)
     
     # Only truncate if trunc_length is less than the hash output length
     if trunc_length < (bitlength // 4):  # Each hex char is 4 bits
@@ -93,7 +101,7 @@ def method_hash(df, column_in:str, column_out:str, method_name:str):
     mthd =  Method(method_name)
     
     def hash_rename(df, col_in, col_out):
-        df = perf_hash(srcdf=df, col_to_hash=col_in, salt_str=mthd.hash_key, trunc_length=mthd.hash_trunc_length)
+        df = perf_hash(srcdf=df, col_to_hash=col_in, salt_str=mthd.hash_key, trunc_length=mthd.hash_trunc_length, output_format=mthd.output_format)
         return df.withColumnRenamed(col_in, col_out)
     
     #check if user supplies columns to hash is a single string or an array
