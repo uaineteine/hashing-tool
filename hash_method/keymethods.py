@@ -14,7 +14,16 @@ if hash_dir is None:
 
 # Defintions
 
-def compute_md5_sum(input_string: str, output_format: str = "hex") -> str:
+class OutputFormat(str):
+    HEX = "hex"
+    BASE64 = "base64"
+
+    def __new__(cls, value: str):
+        if value not in (cls.HEX, cls.BASE64):
+            raise ValueError(f"Invalid output format: {value}. Supported formats are: {cls.HEX}, {cls.BASE64}")
+        return str.__new__(cls, value)
+
+def compute_md5_sum(input_string: str, output_format: str = OutputFormat.HEX) -> str:
     """
     This function returns an MD5 checksum from a UTF-8 string, in hex or base64.
     
@@ -51,7 +60,7 @@ class Method():
         self.hash_key = ""
         self.checksum = ""
         self.hash_trunc_length = 256
-        self.output_format = "hex"  # default output format
+        self.output_format = OutputFormat.HEX  # default output format
         self.load(name)
 
     def load(self, name: str, spark=None):
@@ -77,7 +86,8 @@ class Method():
         self.hash_key = json_config.get("hash_key", "")
         self.checksum = json_config.get("checksum", "")
         self.hash_trunc_length = json_config.get("truncation_length", 256)
-        self.output_format = json_config.get("output_format", "hex")  # default to hex if not present
+        self.output_format = json_config.get("output_format", OutputFormat.HEX)  # default to hex if not present
+        self.output_format = OutputFormat(self.output_format)  # Validate output format
 
         print(f"Hashing method initialised with key: {self.hash_key} and truncation length: {self.hash_trunc_length}, output format: {self.output_format}")
 
