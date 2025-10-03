@@ -1,10 +1,12 @@
 # Hashing Tool
 
-A Python utility for hashing operations, supporting various key methods and hash algorithms. This tool is designed to be modular and extensible, making it easy to add new hashing methods or key derivation techniques.
+A Python utility for hashing operations, supporting configurable key methods, output formats, and integrity checks. This tool is modular and extensible, making it easy to add new hashing methods or key derivation techniques.
 
 ## Features
 - Core hashing logic in `core.py`
-- Pluggable key methods in `keymethods.py`
+- Configurable key methods and output formats in `keymethods.py`
+- Output format options: `hex` (default) or `base64`
+- Integrity check for hash keys using MD5 checksum
 - Organized codebase for maintainability
 - Easy to extend with new hash methods (see `hash_method/` directory)
 
@@ -12,7 +14,7 @@ A Python utility for hashing operations, supporting various key methods and hash
 ```
 __init__.py           # Package initializer
 core.py               # Main hashing logic
-keymethods.py         # Key derivation and management
+keymethods.py         # Key derivation, config loading, and output format
 requirements.txt      # Python dependencies
 hash_method/          # Directory for additional hash method modules
 ```
@@ -23,7 +25,7 @@ hash_method/          # Directory for additional hash method modules
    ```powershell
    pip install -r requirements.txt
    ```
-   
+
 ## Environment Variable Requirement
 **Important:** Before using this package, you must set the `HASH_METHOD_LOC` environment variable to the directory containing your hash method configuration files. If this variable is not set, an error will be raised on import.
 
@@ -32,25 +34,37 @@ Import the core functions and key methods in your Python scripts, or extend the 
 
 Example:
 ```python
-from core import your_hash_function
-from keymethods import your_key_method
+from hash_method.core import your_hash_function
+from hash_method.keymethods import Method, compute_md5_sum, OutputFormat
 # ... use the functions as needed ...
+```
+
+### Output Format
+You can specify the output format for hashes as either `hex` (default) or `base64` using the `OutputFormat` class:
+
+```python
+result = compute_md5_sum("my string", output_format=OutputFormat.BASE64)
 ```
 
 ## Configuration File Example
 
-The tool expects a JSON configuration file for each hashing method. The file should look like this:
+Each hashing method expects a JSON configuration file. The file should look like this:
 
 ```json
 {
    "hash_key": "your-secret-key-string",
    "checksum": "md5-checksum-of-hash-key",
-   "truncation_length": 16
+   "truncation_length": 16,
+   "output_format": "hex"
 }
 ```
 
 - `hash_key`: The secret key string used for hashing.
-- `checksum`: The MD5 checksum of the `hash_key` (for integrity verification).
+- `checksum`: The MD5 checksum of the `hash_key` (for integrity verification, checked automatically on load).
 - `truncation_length`: (Optional) The length to which the hash should be truncated (default is 256).
+- `output_format`: (Optional) Output format for hashes, either `hex` or `base64` (default is `hex`).
 
-Place your config file in the appropriate config directory and reference it by name (e.g., `example_config.json` → name='example').
+Place your config file in the directory specified by `HASH_METHOD_LOC` and reference it by name (e.g., `example_config.json` → name='example').
+
+## Integrity Check
+When loading a hashing method, the tool will automatically verify the integrity of the `hash_key` by comparing its MD5 checksum (in the specified output format) to the value in the config file. If the check fails, an error is raised to prevent accidental use of a modified key.
