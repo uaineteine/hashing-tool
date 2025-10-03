@@ -1,5 +1,7 @@
 # Hashing Tool
 
+![py version](https://img.shields.io/badge/python-3.10+-blue) ![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-brightgreen) 
+
 A Python utility for hashing operations, supporting configurable key methods, output formats, and integrity checks. This tool is modular and extensible, making it easy to add new hashing methods or key derivation techniques.
 
 ## Features
