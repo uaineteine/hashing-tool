@@ -77,8 +77,18 @@ def perf_hash(srcdf, col_to_hash:str, salt_str:str, bitlength=256, trunc_length=
     if output_format == OutputFormat.BASE64:
         srcdf = base64_col(srcdf, col_to_hash)
     
+    # Determine the hash output length based on the output format
+    if output_format == OutputFormat.HEX:
+        hash_output_length = bitlength // 4  # Each hex char is 4 bits
+    elif output_format == OutputFormat.BASE64:
+        # Each 3 bytes (24 bits) become 4 base64 chars
+        hash_output_length = ((bitlength + 7) // 8)  # bytes
+        hash_output_length = ((hash_output_length + 2) // 3) * 4  # base64 chars
+    else:
+        raise ValueError(f"Unsupported output format: {output_format}")
+
     # Only truncate if trunc_length is less than the hash output length
-    if trunc_length < (bitlength // 4):  # Each hex char is 4 bits
+    if trunc_length < hash_output_length:
         return trunc_col(srcdf, col_to_hash, trunc_length)
     else:
         return srcdf
