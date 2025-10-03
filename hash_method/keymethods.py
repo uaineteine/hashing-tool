@@ -7,11 +7,6 @@ import base64
 #package import
 import adaptiveio
 
-# Check HASH_METHOD_LOC environment variable on import
-hash_dir = os.getenv("HASH_METHOD_LOC")
-if hash_dir is None:
-    raise EnvironmentError("Environment variable 'HASH_METHOD_LOC' is not set. Please set it before importing this module.")
-
 # Definitions
 
 class OutputFormat(str):
@@ -74,7 +69,10 @@ class Method():
         """
         print("Loading config files for hashing...")
         try:
+            # Check HASH_METHOD_LOC environment variable on import
             hash_dir = os.getenv("HASH_METHOD_LOC")
+            if hash_dir is None:
+                raise EnvironmentError("Environment variable 'HASH_METHOD_LOC' is not set. Please set it before importing this module.")
             hash_path = os.path.join(hash_dir, f"{name}_config.json")
             json_config = adaptiveio.load_json(hash_path, spark=spark)
         except Exception as e:

@@ -2,7 +2,7 @@ import argparse
 import json
 import base64
 import secrets
-from hash_method.chksum import compute_md5_sum
+from hash_method.keymethods import compute_md5_sum
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a new hash method/key JSON file.")
