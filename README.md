@@ -29,7 +29,33 @@ hash_method/          # Directory for additional hash method modules
 ## Environment Variable Requirement
 **Important:** Before using this package, you must set the `HASH_METHOD_LOC` environment variable to the directory containing your hash method configuration files. If this variable is not set, an error will be raised on import.
 
+
 ## Usage
+### Generate a New Hash Method/Key JSON File (CLI)
+
+You can generate a new random hash key configuration file using the standalone CLI script:
+
+```powershell
+python generate_hash_json.py --output my_method.json --output-format hex --truncation-length 16
+```
+
+- `--output` (required): Path to the output JSON file.
+- `--output-format`: Output format for hashes, either `hex` (default) or `base64`.
+- `--truncation-length`: (Optional) Truncation length for the hash (default: 16).
+
+This will create a config file like:
+
+```json
+{
+   "hash_key": "<random-base64-key>",
+   "checksum": "<md5-checksum>",
+   "truncation_length": 16,
+   "output_format": "hex"
+}
+```
+
+---
+
 Import the core functions and key methods in your Python scripts, or extend the tool by adding new modules to the `hash_method/` directory.
 
 Example:
