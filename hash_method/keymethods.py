@@ -12,7 +12,7 @@ hash_dir = os.getenv("HASH_METHOD_LOC")
 if hash_dir is None:
     raise EnvironmentError("Environment variable 'HASH_METHOD_LOC' is not set. Please set it before importing this module.")
 
-# Defintions
+# Definitions
 
 class OutputFormat(str):
     HEX = "hex"
