@@ -12,13 +12,11 @@ A Python utility for hashing operations, supporting configurable key methods, ou
 - Organized codebase for maintainability
 - Easy to extend with new hash methods (see `hash_method/` directory)
 
-## Project Structure
+## Module Structure
 ```
-__init__.py           # Package initializer
 core.py               # Main hashing logic
 keymethods.py         # Key derivation, config loading, and output format
 requirements.txt      # Python dependencies
-hash_method/          # Directory for additional hash method modules
 ```
 
 ## Packaging
