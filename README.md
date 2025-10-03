@@ -19,12 +19,23 @@ keymethods.py         # Key derivation, config loading, and output format
 requirements.txt      # Python dependencies
 ```
 
-## Packaging
+
+## Packaging & Building
 1. Clone the repository or download the source code.
 2. Install dependencies:
    ```powershell
    pip install -r requirements.txt
    ```
+
+### Build the Package
+
+To build the Python package (source distribution and wheel), run:
+
+```powershell
+python build.py
+```
+
+This will remove any previous builds and create new distribution files in the `dist/` directory.
 
 ## Environment Variable Requirement
 **Important:** Before using this package, you must set the `HASH_METHOD_LOC` environment variable to the directory containing your hash method configuration files. If this variable is not set, an error will be raised on import.
